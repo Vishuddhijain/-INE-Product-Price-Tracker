@@ -308,21 +308,6 @@ Useful recording options:
 --debug              save failed-attempt HTML and screenshots
 ```
 
-## Verification checklist
-
-Before submission, verify:
-
-- partial and full product search
-- track and untrack flow
-- successful price/stock scrape
-- retry after a failed/slow attempt
-- no invalid price written on failure
-- history and scrape log updated correctly
-- scheduled endpoint returns `202`
-- cron test run reaches the Render backend
-- Vercel frontend reaches the Render API
-- headed-mode recording shows a real failure/slow response and recovery
-
 ## Deployment
 
 ### Backend — Render
@@ -361,8 +346,6 @@ Supabase stores:
 - `price_history`
 - `scrape_logs`
 
-**No Docker is used in this project.**
-
 ## Known limitations
 
 - The mock store is intentionally unreliable; transient 429/500/503 responses can still occur.
@@ -378,4 +361,3 @@ Supabase stores:
 | Render API       | https://ine-product-price-tracker-znup.onrender.com         |
 | GitHub           | https://github.com/Vishuddhijain/-INE-Product-Price-Tracker |
 | Design note      | [docs/design-note.md](docs/design-note.md)                  |
-| Headed recording | _Add final recording link before submission_                |
