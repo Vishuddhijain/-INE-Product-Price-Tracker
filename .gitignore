@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Debug / temporary files
+probe-output/
+scrape-debug/
+debug/
+tmp/
+temp/
+scripts/
+
+# Build output
+dist/
+build/
+.next/
+.vercel/
+
+# Test coverage
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Playwright
+playwright-report/
+test-results/
+
+# Local databases / generated data
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+*.tmp
+*.temp
+
+# Secrets / credentials
+*.pem
+*.key
+# Project archives
+*.zip
