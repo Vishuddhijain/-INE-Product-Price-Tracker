@@ -2,7 +2,7 @@
 
 Search the INE demo store, pick a product, and watch its price and stock over time. A scraper checks every tracked product **once every 2 hours**, retries failures with exponential backoff, refuses to store any reading it cannot verify, and logs **every** attempt, including the ones that fail.
 
-Built for the INE Software Engineer Intern assignment. Scraping reliability is the heart of it, so the reasoning lives in [**DESIGN_NOTE.md**](https://claude.ai/chat/docs/design-note.md).
+Built for the INE Software Engineer Intern assignment. Scraping reliability is the heart of it, so the reasoning lives in [**DESIGN_NOTE.md**](https://github.com/Vishuddhijain/-INE-Product-Price-Tracker/blob/main/docs/design-note.md)
 
 ## Submission links
 
@@ -12,7 +12,7 @@ Built for the INE Software Engineer Intern assignment. Scraping reliability is t
 | API (Render)         | `https://ine-product-price-tracker-znup.onrender.com`         |
 | Source code          | `https://github.com/Vishuddhijain/-INE-Product-Price-Tracker` |
 | Headed-run recording | TODO: link                                                    |
-| Design note          | [DESIGN_NOTE.md](https://claude.ai/chat/docs/design-note.md)  |
+| Design note          | [DESIGN_NOTE.md](https://github.com/Vishuddhijain/-INE-Product-Price-Tracker/blob/main/docs/design-note.md)  |
 
 ## What it does
 
