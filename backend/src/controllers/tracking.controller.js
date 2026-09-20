@@ -1,7 +1,8 @@
 import {
   createTrackedProduct,
   findTrackedProductById,
-  listActiveTrackedProducts
+  listActiveTrackedProducts,
+  untrackProduct
 } from "../services/product.service.js";
 import { getProductHistory, getScrapeLogs } from "../services/history.service.js";
 import { scrapeTrackedProduct } from "../services/scraper.service.js";
@@ -60,6 +61,21 @@ export async function getTrackedProductLogsController(req, res, next) {
 
     const logs = await getScrapeLogs(trackedId);
     res.json({ success: true, trackedProduct: existing, logs });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function untrackProductController(req, res, next) {
+  try {
+    const trackedId = requireTrackedId(req);
+    const existing = await findTrackedProductById(trackedId);
+    if (!existing) {
+      throw createError("Tracked product not found.", 404);
+    }
+
+    const updated = await untrackProduct(trackedId);
+    res.json({ success: true, item: updated });
   } catch (error) {
     next(error);
   }

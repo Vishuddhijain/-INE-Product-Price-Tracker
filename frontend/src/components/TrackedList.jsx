@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getHistory, scrapeNow } from "../lib/api.js";
+import { getPriceDrop, justBackInStock } from "../lib/indicators.js";
 
 function formatPrice(price) {
   if (price == null) return "—";
@@ -29,9 +30,9 @@ export default function TrackedList({ items, selectedId, onSelect, onRefresh }) 
         items.map(async (item) => {
           try {
             const history = await getHistory(item.id);
-            return [item.id, history[0] || null];
+            return [item.id, { current: history[0] || null, previous: history[1] || null }];
           } catch {
-            return [item.id, null];
+            return [item.id, { current: null, previous: null }];
           }
         })
       );
@@ -49,7 +50,10 @@ export default function TrackedList({ items, selectedId, onSelect, onRefresh }) 
     try {
       await scrapeNow(item.id);
       const history = await getHistory(item.id);
-      setLatest((prev) => ({ ...prev, [item.id]: history[0] || null }));
+      setLatest((prev) => ({
+        ...prev,
+        [item.id]: { current: history[0] || null, previous: history[1] || null }
+      }));
       onRefresh?.();
     } finally {
       setScrapingId(null);
@@ -79,9 +83,12 @@ export default function TrackedList({ items, selectedId, onSelect, onRefresh }) 
 
       <ul className="tracked-list">
         {items.map((item) => {
-          const point = latest[item.id];
+          const point = latest[item.id]?.current;
+          const previousPoint = latest[item.id]?.previous;
           const isActive = item.id === selectedId;
           const inStock = point?.stock_status && !/out of stock|sold out/i.test(point.stock_status);
+          const drop = getPriceDrop(point, previousPoint);
+          const backInStock = justBackInStock(point, previousPoint);
 
           return (
             <li key={item.id}>
@@ -96,6 +103,16 @@ export default function TrackedList({ items, selectedId, onSelect, onRefresh }) 
                     Last checked {timeAgo(point?.scraped_at)}
                     {point?.stock_status ? ` · ${point.stock_status}` : ""}
                   </span>
+                  {(drop || backInStock) && (
+                    <span className="tracked-badges">
+                      {drop && (
+                        <span className="badge badge--drop">
+                          ↓ {formatPrice(drop.amount)} ({drop.percent.toFixed(1)}%)
+                        </span>
+                      )}
+                      {backInStock && <span className="badge badge--stock">Back in stock</span>}
+                    </span>
+                  )}
                 </div>
                 <div className="tracked-price-block">
                   <span className={`price mono ${point ? "" : "price--empty"}`}>

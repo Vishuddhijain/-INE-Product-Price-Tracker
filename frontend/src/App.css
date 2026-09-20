@@ -305,8 +305,14 @@
   background: var(--bad);
 }
 
-.btn-scrape {
-  margin-left: 6px;
+.tracked-row-actions {
+  display: flex;
+  gap: 14px;
+  padding-left: 6px;
+}
+
+.btn-untrack:hover:not(:disabled) {
+  color: var(--bad);
 }
 
 /* ---------- Detail panel ---------- */
@@ -435,4 +441,47 @@
 
 .empty-state p {
   margin: 0 0 4px;
+}
+
+/* ---------- Price-drop / back-in-stock badges ---------- */
+
+.tracked-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.detail-badges {
+  margin-top: 8px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.01em;
+}
+
+.badge--drop {
+  color: var(--good);
+  background: rgba(62, 107, 82, 0.1);
+}
+
+.badge--stock {
+  color: var(--good);
+  background: rgba(62, 107, 82, 0.1);
+}
+
+.btn-untrack-outline {
+  border-color: var(--bad);
+  color: var(--bad);
+}
+
+.btn-untrack-outline:hover:not(:disabled) {
+  background: var(--bad);
+  color: var(--paper-raised);
 }

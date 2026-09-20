@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { searchProducts, trackProduct } from "../lib/api.js";
+import { searchProducts, trackProduct, untrackProduct } from "../lib/api.js";
 
-export default function SearchPanel({ trackedUrls, onTracked }) {
+export default function SearchPanel({ trackedByUrl, onTracked, onUntracked }) {
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState("idle"); // idle | loading | done | error
-  const [trackingUrl, setTrackingUrl] = useState(null);
+  const [pendingUrl, setPendingUrl] = useState(null);
   const [error, setError] = useState("");
 
   async function runSearch(e) {
@@ -24,7 +24,7 @@ export default function SearchPanel({ trackedUrls, onTracked }) {
   }
 
   async function handleTrack(item) {
-    setTrackingUrl(item.productUrl);
+    setPendingUrl(item.productUrl);
     try {
       const saved = await trackProduct({
         name: item.name,
@@ -35,7 +35,19 @@ export default function SearchPanel({ trackedUrls, onTracked }) {
     } catch (err) {
       setError(err?.response?.data?.error || err.message || "Could not track this product.");
     } finally {
-      setTrackingUrl(null);
+      setPendingUrl(null);
+    }
+  }
+
+  async function handleUntrack(item, trackedId) {
+    setPendingUrl(item.productUrl);
+    try {
+      await untrackProduct(trackedId);
+      onUntracked?.(trackedId);
+    } catch (err) {
+      setError(err?.response?.data?.error || err.message || "Could not untrack this product.");
+    } finally {
+      setPendingUrl(null);
     }
   }
 
@@ -70,7 +82,9 @@ export default function SearchPanel({ trackedUrls, onTracked }) {
       {items.length > 0 && (
         <ul className="result-list">
           {items.map((item) => {
-            const already = trackedUrls.has(item.productUrl);
+            const trackedId = trackedByUrl.get(item.productUrl);
+            const isPending = pendingUrl === item.productUrl;
+
             return (
               <li key={item.productUrl} className="result-row">
                 <div className="result-info">
@@ -80,14 +94,25 @@ export default function SearchPanel({ trackedUrls, onTracked }) {
                     {item.sku && <span className="mono">{item.sku}</span>}
                   </span>
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  disabled={already || trackingUrl === item.productUrl}
-                  onClick={() => handleTrack(item)}
-                >
-                  {already ? "Tracking" : trackingUrl === item.productUrl ? "Adding…" : "Track"}
-                </button>
+                {trackedId ? (
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-untrack-outline"
+                    disabled={isPending}
+                    onClick={() => handleUntrack(item, trackedId)}
+                  >
+                    {isPending ? "Removing…" : "Untrack"}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    disabled={isPending}
+                    onClick={() => handleTrack(item)}
+                  >
+                    {isPending ? "Adding…" : "Track"}
+                  </button>
+                )}
               </li>
             );
           })}

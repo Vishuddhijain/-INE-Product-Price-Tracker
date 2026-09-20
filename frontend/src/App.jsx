@@ -20,12 +20,20 @@ export default function App() {
     refresh();
   }, []);
 
-  const trackedUrls = useMemo(() => new Set(tracked.map((t) => t.product_url)), [tracked]);
+  const trackedByUrl = useMemo(
+    () => new Map(tracked.map((t) => [t.product_url, t.id])),
+    [tracked]
+  );
   const selected = tracked.find((t) => t.id === selectedId) || null;
 
   function handleTracked(saved) {
     setTracked((prev) => [saved, ...prev]);
     setSelectedId(saved.id);
+  }
+
+  function handleUntracked(untrackedId) {
+    setTracked((prev) => prev.filter((t) => t.id !== untrackedId));
+    setSelectedId((prev) => (prev === untrackedId ? null : prev));
   }
 
   return (
@@ -40,13 +48,14 @@ export default function App() {
 
       <main className="layout">
         <div className="layout-left">
-          <SearchPanel trackedUrls={trackedUrls} onTracked={handleTracked} />
+          <SearchPanel trackedByUrl={trackedByUrl} onTracked={handleTracked} onUntracked={handleUntracked} />
           {loaded && (
             <TrackedList
               items={tracked}
               selectedId={selectedId}
               onSelect={setSelectedId}
               onRefresh={refresh}
+              onUntracked={handleUntracked}
             />
           )}
         </div>

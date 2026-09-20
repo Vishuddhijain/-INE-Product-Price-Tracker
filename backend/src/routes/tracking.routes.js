@@ -4,7 +4,8 @@ import {
   createTrackedProductController,
   getTrackedProductHistoryController,
   getTrackedProductLogsController,
-  scrapeTrackedProductController
+  scrapeTrackedProductController,
+  untrackProductController
 } from "../controllers/tracking.controller.js";
 
 const router = Router();
@@ -14,5 +15,6 @@ router.post("/api/tracked-products", createTrackedProductController);
 router.get("/api/tracked-products/:id/history", getTrackedProductHistoryController);
 router.get("/api/tracked-products/:id/logs", getTrackedProductLogsController);
 router.post("/api/tracked-products/:id/scrape", scrapeTrackedProductController);
+router.delete("/api/tracked-products/:id", untrackProductController);
 
 export default router;

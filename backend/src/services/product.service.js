@@ -202,6 +202,21 @@ export async function listActiveTrackedProducts() {
   return data || [];
 }
 
+export async function untrackProduct(trackedId) {
+  if (!supabase) {
+    throw createError("Supabase is not configured.", 503);
+  }
+
+  const { data, error } = await supabase
+    .from("tracked_products")
+    .update({ active: false })
+    .eq("id", trackedId)
+    .select();
+
+  if (error) throw error;
+  return data?.[0] || null;
+}
+
 export async function createTrackedProduct({ name, url, imageUrl } = {}) {
   if (!supabase) {
     throw createError("Supabase is not configured.", 503);

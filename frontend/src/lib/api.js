@@ -33,3 +33,8 @@ export async function scrapeNow(trackedId) {
   const { data } = await api.post(`/api/tracked-products/${trackedId}/scrape`);
   return data;
 }
+
+export async function untrackProduct(trackedId) {
+  const { data } = await api.delete(`/api/tracked-products/${trackedId}`);
+  return data.item;
+}

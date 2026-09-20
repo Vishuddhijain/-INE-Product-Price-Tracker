@@ -10,6 +10,7 @@ import {
   CartesianGrid
 } from "recharts";
 import { getHistory, getLogs, scrapeNow } from "../lib/api.js";
+import { getPriceDrop, justBackInStock } from "../lib/indicators.js";
 
 function formatPrice(price) {
   if (price == null) return "—";
@@ -89,6 +90,9 @@ export default function ProductDetail({ product }) {
   // line sitting on the axis, which looks broken rather than "no data yet".
   const hasStockData = chartData.some((row) => row.stock != null);
 
+  const drop = getPriceDrop(history[0], history[1]);
+  const backInStock = justBackInStock(history[0], history[1]);
+
   return (
     <section className="panel detail-panel">
       <div className="panel-head detail-head">
@@ -97,6 +101,16 @@ export default function ProductDetail({ product }) {
           <a href={product.product_url} target="_blank" rel="noreferrer" className="muted small">
             {product.product_url}
           </a>
+          {(drop || backInStock) && (
+            <div className="tracked-badges detail-badges">
+              {drop && (
+                <span className="badge badge--drop">
+                  ↓ Price dropped {formatPrice(drop.amount)} ({drop.percent.toFixed(1)}%)
+                </span>
+              )}
+              {backInStock && <span className="badge badge--stock">🟢 Back in stock</span>}
+            </div>
+          )}
         </div>
         <button type="button" className="btn btn-accent" disabled={scraping} onClick={handleScrape}>
           {scraping ? "Scraping…" : "Scrape now"}
