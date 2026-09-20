@@ -4,11 +4,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "render-build": "npm install && npx playwright install chromium chromium-headless-shell"
-  },
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "dev": "nodemon src/server.js",
+  "start": "node src/server.js",
+  "render-build": "PLAYWRIGHT_BROWSERS_PATH=0 npm install && PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
